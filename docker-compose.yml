@@ -1,0 +1,29 @@
+version: "3.3"
+
+services:
+  mongo:
+    image: mongo:4
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=12Sqecd34!
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data/db
+    networks:
+      - internal
+
+  redis:
+    image: redis:alpine
+    environment:
+      - REDIS_PASSWORD=12Sqecd34!
+    ports:
+      - 6379:6379
+    networks:
+      - internal
+      
+networks:
+  internal:
+
+volumes:
+  data:
