@@ -7,7 +7,7 @@ interface Meta {
 	user?: object | null | undefined;
 }
 
-const ApiService: ServiceSchema<ApiSettingsSchema> = {
+const GatewayService: ServiceSchema<ApiSettingsSchema> = {
 	name: "api",
 	mixins: [ApiGateway],
 
@@ -23,6 +23,12 @@ const ApiService: ServiceSchema<ApiSettingsSchema> = {
 		use: [],
 
 		routes: [
+            {
+                path: "/api/users",
+                aliases: {
+                    "POST /": "users.createUser",
+                },
+            },
 			{
 				path: "/api",
 
@@ -31,6 +37,7 @@ const ApiService: ServiceSchema<ApiSettingsSchema> = {
 				// Route-level Express middlewares. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Middlewares
 				use: [],
 
+               
 				// Enable/disable parameter merging method. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Disable-merging
 				mergeParams: true,
 
@@ -43,8 +50,10 @@ const ApiService: ServiceSchema<ApiSettingsSchema> = {
 				// The auto-alias feature allows you to declare your route alias directly in your services.
 				// The gateway will dynamically build the full routes from service schema.
 				autoAliases: true,
-
-				aliases: {},
+                aliases: {
+                    // "POST: /users": "users.userCreateActions",
+                },
+			
 
 				/**
 				 * Before call hook. You can check the request.
@@ -165,4 +174,4 @@ const ApiService: ServiceSchema<ApiSettingsSchema> = {
 	},
 };
 
-export default ApiService;
+export default GatewayService;

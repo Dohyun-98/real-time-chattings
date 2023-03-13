@@ -28,9 +28,9 @@ import { Errors } from "moleculer";
  */
 const brokerConfig: BrokerOptions = {
 	// Namespace of nodes to segment your nodes on the same network.
-	namespace: "",
+	namespace: process.env.SERVICE_BROKER_NAMESPACE || "local",
 	// Unique node identifier. Must be unique in a namespace.
-	nodeID: null,
+	nodeID: String(process.env.NODE_NAME) || "node1",
 	// Custom metadata store. Store here what you want. Accessing: `this.broker.metadata`
 	metadata: {},
 
@@ -59,7 +59,14 @@ const brokerConfig: BrokerOptions = {
 	// More info: https://moleculer.services/docs/0.14/networking.html
 	// Note: During the development, you don't need to define it because all services will be loaded locally.
 	// In production you can set it via `TRANSPORTER=nats://localhost:4222` environment variable.
-	transporter: null, // "Redis"
+	transporter: null ,
+    // {
+    //     type : String(process.env.TRANSPORTER_TYPE) || "redis",
+    //     options : {
+    //         port : Number(process.env.REDIS_PORT),
+    //         host : String(process.env.REDIS_HOST),
+    //     },
+    //  }, // "Redis"
 
 	// Define a cacher.
 	// More info: https://moleculer.services/docs/0.14/caching.html

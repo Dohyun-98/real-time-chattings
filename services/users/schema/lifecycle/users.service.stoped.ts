@@ -1,7 +1,9 @@
-import { UsersServiceThis } from "../../type/service/users.service.type";
+import type { UsersServiceThis } from "../../type/service/users.service.type";
 
-export async function UsersServiceStopped(this: UsersServiceThis) {
+async function usersServiceStopped(this: UsersServiceThis): Promise<void> {
     await this.adapter.disconnect();
     this.logger.info("Users service database disconnected");
     this.logger.info("Users service stopped");
 }
+
+export default usersServiceStopped;

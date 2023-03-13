@@ -1,11 +1,12 @@
-export const ServiceConfig =  {
+const serviceConfig =  {
     // Service name
     user : {
+        serviceName: "users",
         path: {
-            create: "POST /users",
-            get: "GET /users",
-            update: "PUT /users",
-            delete: "DELETE /users",
+            create: "POST /",
+            get: "GET /",
+            update: "PUT /",
+            delete: "DELETE /",
             // patch: "PATCH /users",
         },
         database:{
@@ -17,11 +18,13 @@ export const ServiceConfig =  {
     },
     auth : {
         path:{
-            login: "POST /auth/login",
-            register: "POST /auth/register",
-            logout: "POST /auth/logout",
-            refresh: "POST /auth/refresh",
+            login: "POST /login",
+            register: "POST /register",
+            logout: "POST /logout",
+            refresh: "POST /refresh",
         }
     }
 
 }
+
+export default serviceConfig;

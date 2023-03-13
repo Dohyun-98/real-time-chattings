@@ -1,4 +1,5 @@
-import { Service } from "moleculer";
-import { MongoService } from "../../../../utill/mongo/interface/mongo.service.interface";
+import type { Service } from "moleculer";
+import type MongoDbAdapter from "moleculer-db-adapter-mongo";
 
-export type UsersServiceThis =  Service & MongoService;
+
+export type UsersServiceThis =  Service &{adapter : MongoDbAdapter, collections : string} 

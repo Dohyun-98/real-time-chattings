@@ -1,5 +1,9 @@
-import { UsersServiceThis } from "../../type/service/users.service.type";
+import type { UsersServiceThis } from "../../type/service/users.service.type";
 
-export default function UsersServiceCreated (this:UsersServiceThis) {
+function usersServiceCreated (this:UsersServiceThis) : void {
     this.broker.logger.info("Users service created");
+    this.adapter.init(this.broker,this);
+    this.logger.info("Users service database initialized");
 }
+
+export default usersServiceCreated;

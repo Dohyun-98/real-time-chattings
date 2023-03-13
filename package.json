@@ -5,6 +5,8 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "dev": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js --config moleculer.config.ts --hot --repl services/**/*.service.ts",
+    "dev_user": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js -E env/local/users.service.local.env --config services/users/moleculer.users.config.ts --hot --repl services/users/*.service.ts",
+    "dev_gateway": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js -E env/local/gateway.service.local.env --config services/gateway/moleculer.gateway.config.ts --hot --repl services/gateway/gateway.service.ts",
     "start": "moleculer-runner --config dist/moleculer.config.js",
     "test:types": "concurrently npm:prettier npm:lint npm:typecheck",
     "typecheck": "tsc --noEmit && echo \"tsc: no typecheck errors\"",
@@ -45,11 +47,16 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/uuid": "^9.0.1",
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.0.3",
     "ioredis": "^5.0.0",
     "moleculer": "^0.14.27",
     "moleculer-db": "^0.8.23",
     "moleculer-db-adapter-mongo": "^0.4.17",
-    "moleculer-web": "^0.10.5"
+    "moleculer-web": "^0.10.5",
+    "uuid": "^9.0.0"
   },
   "engines": {
     "node": ">= 16.x.x"

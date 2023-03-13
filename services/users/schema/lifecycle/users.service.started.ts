@@ -1,8 +1,8 @@
-import { UsersServiceThis } from "../../type/service/users.service.type";
+import type { UsersServiceThis } from "../../type/service/users.service.type";
 
-export async function  UsersServiceStarted (this : UsersServiceThis){
-   this.logger.info("Users service started");
-    //  this.adapter.init(this.broker,this)
-    await this.adapter.connect();
-    this.logger.info('Users service database connected')
+async function usersServiceStarted(this: UsersServiceThis) : Promise<void> {
+        await this.adapter.connect();
+        this.logger.info("Users service database connected");
+        this.logger.info("Users service started");
 }
+export default usersServiceStarted;

@@ -186,7 +186,6 @@ const brokerConfig: BrokerOptions = {
 		},
 	},
 
-
 	// Enable built-in tracing function. More info: https://moleculer.services/docs/0.14/tracing.html
 	// tracing: {
 	// 	enabled: true,
@@ -212,7 +211,6 @@ const brokerConfig: BrokerOptions = {
 			type: "", // Console exporter is only for development!
 		},
 	},
-
 
 	// Register custom middlewares
 	middlewares: [],
