@@ -1,4 +1,4 @@
-import type { UsersServiceThis } from "../../type/service/users.service.type";
+import type { UsersServiceThis } from "../../type/users.service.type";
 
 function usersServiceCreated (this:UsersServiceThis) : void {
     this.broker.logger.info("Users service created");

@@ -7,6 +7,8 @@
     "dev": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js --config moleculer.config.ts --hot --repl services/**/*.service.ts",
     "dev_user": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js -E env/local/users.service.local.env --config services/users/moleculer.users.config.ts --hot --repl services/users/*.service.ts",
     "dev_gateway": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js -E env/local/gateway.service.local.env --config services/gateway/moleculer.gateway.config.ts --hot --repl services/gateway/gateway.service.ts",
+    "dev_auth": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js -E env/local/auth.service.local.env --config services/auth/moleculer.auth.config.ts --hot --repl services/auth/*.service.ts",
+    "dev_io": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js -E env/local/io.service.local.env --config services/io/moleculer.io.config.ts --hot --repl services/io/*.service.ts",
     "start": "moleculer-runner --config dist/moleculer.config.js",
     "test:types": "concurrently npm:prettier npm:lint npm:typecheck",
     "typecheck": "tsc --noEmit && echo \"tsc: no typecheck errors\"",
@@ -48,14 +50,17 @@
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/uuid": "^9.0.1",
     "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "ioredis": "^5.0.0",
+    "jsonwebtoken": "^9.0.0",
     "moleculer": "^0.14.27",
     "moleculer-db": "^0.8.23",
     "moleculer-db-adapter-mongo": "^0.4.17",
     "moleculer-web": "^0.10.5",
+    "socket.io": "^4.6.1",
     "uuid": "^9.0.0"
   },
   "engines": {

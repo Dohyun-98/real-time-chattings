@@ -20,7 +20,7 @@
 module.exports = {
     apps : [
       {
-      name: "gateway-service",
+      name: "gateway",
       script: "npm run dev_gateway",
     //   interpreter: "ts-node",
       // exec_mode: "cluster",
@@ -36,7 +36,7 @@ module.exports = {
       }
     },
     {
-      name: "user-service",
+      name: "user",
       script: "npm run dev_user",
       // interpreter: "ts-node",
       // exec_mode: "cluster",
@@ -51,37 +51,37 @@ module.exports = {
         NODE_ENV: "production",
       }
     },
-    // {
-    //   name: "socket.io-service",
-    //   script: "npm run dev_socket --watch",
-    //   // interpreter: "ts-node",
-    //   // exec_mode: "cluster",
-    //   instances: "1",
-    //   autorestart: false,
-    //   watch: true,
-    //   max_memory_restart: "1G",
-    //   env: {
-    //     NODE_ENV: "development",
-    //   },
-    //   env_production: {
-    //     NODE_ENV: "production",
-    //   }
-    // },
-    // {
-    //   name: "product-service",
-    //   script: "npm run dev_product",
-    //   // interpreter: "ts-node",
-    //   // exec_mode: "cluster",
-    //   instances: "1",
-    //   autorestart: false,
-    //   watch: true,
-    //   max_memory_restart: "1G",
-    //   env: {
-    //     NODE_ENV: "development",
-    //   },
-    //   env_production: {
-    //     NODE_ENV: "production",
-    //   }
-    // }, 
+    {
+      name: "auth",
+      script: "npm run dev_auth",
+      // interpreter: "ts-node",
+      // exec_mode: "cluster",
+      instances: "1",
+      autorestart: false,
+      watch: true,
+      max_memory_restart: "1G",
+      env: {
+        NODE_ENV: "development",
+      },
+      env_production: {
+        NODE_ENV: "production",
+      }
+    },
+    {
+      name: "io",
+      script: "npm run dev_io",
+      // interpreter: "ts-node",
+      // exec_mode: "cluster",
+      instances: "1",
+      autorestart: false,
+      watch: true,
+      max_memory_restart: "1G",
+      env: {
+        NODE_ENV: "development",
+      },
+      env_production: {
+        NODE_ENV: "production",
+      }
+    }, 
   ]
   }

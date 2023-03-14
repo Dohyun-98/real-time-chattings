@@ -1,6 +1,7 @@
 import type { Context, ServiceSchema } from "moleculer";
-import type { ApiSettingsSchema, GatewayResponse, IncomingRequest, Route } from "moleculer-web";
+import type { ApiSettingsSchema, IncomingRequest, Route } from "moleculer-web";
 import ApiGateway from "moleculer-web";
+import serviceConfig from "../config/service.config";
 
 interface Meta {
 	userAgent?: string | null | undefined;
@@ -24,9 +25,18 @@ const GatewayService: ServiceSchema<ApiSettingsSchema> = {
 
 		routes: [
             {
-                path: "/api/users",
+                path: "/api",
                 aliases: {
-                    "POST /": "users.createUser",
+                    "POST /users/": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.create.name}`,
+                    // "GET /": "users.getUsers",
+                    "GET /users/:id": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.get.name}`,
+                    "PUT /users/:id": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.update.name}`,
+                    "DELETE /users/:id": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.delete.name}`,
+                    "POST /auth/login": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.login.name}`,
+                    "POST /auth/register": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.register.name}`,
+                    "POST /auth/logout": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.logout.name}`,
+                    "POST /auth/refresh": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.refresh.name}`,
+                    // socket
                 },
             },
 			{

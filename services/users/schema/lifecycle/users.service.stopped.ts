@@ -1,4 +1,4 @@
-import type { UsersServiceThis } from "../../type/service/users.service.type";
+import type { UsersServiceThis } from "../../type/users.service.type";
 
 async function usersServiceStopped(this: UsersServiceThis): Promise<void> {
     await this.adapter.disconnect();
