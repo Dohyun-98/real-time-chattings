@@ -12,7 +12,6 @@ function ioServiceStarted (this:IoServiceThis) : void {
     //         },
     //     });
     // port 3001\\
-    let rooms = [];
     const server = http.createServer();
     this.io = new Server(server, {
         cors: {

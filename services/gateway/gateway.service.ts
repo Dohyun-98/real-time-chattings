@@ -1,7 +1,9 @@
+import jwt from "jsonwebtoken";
 import type { Context, ServiceSchema } from "moleculer";
 import type { ApiSettingsSchema, IncomingRequest, Route } from "moleculer-web";
 import ApiGateway from "moleculer-web";
 import serviceConfig from "../config/service.config";
+import { User } from "../users/type/user.type";
 
 interface Meta {
 	userAgent?: string | null | undefined;
@@ -146,25 +148,12 @@ const GatewayService: ServiceSchema<ApiSettingsSchema> = {
 		): Record<string, unknown> | null {
 			// Read the token from header
 			const auth = req.headers.authorization;
-
-			if (auth && auth.startsWith("Bearer")) {
-				const token = auth.slice(7);
-
-				// Check the token. Tip: call a service which verify the token. E.g. `accounts.resolveToken`
-				if (token === "123456") {
-					// Returns the resolved user. It will be set to the `ctx.meta.user`
-					return { id: 1, name: "John Doe" };
-				}
-				// Invalid token
-				throw new ApiGateway.Errors.UnAuthorizedError(
-					ApiGateway.Errors.ERR_INVALID_TOKEN,
-					null,
-				);
-			} else {
-				// No token. Throw an error or do nothing if anonymous access is allowed.
-				// throw new E.UnAuthorizedError(E.ERR_NO_TOKEN);
-				return null;
-			}
+            if(!auth||!auth.startsWith('Bearer')){throw new ApiGateway.Errors.UnAuthorizedError('INVALID_TOKEN', 'Invalid token');}
+            const accessToken = auth.split(' ')[1];
+            jwt.verify(accessToken,serviceConfig.gateway.jwt.access.secret,(err,decoded)=>{
+                if(err){throw new ApiGateway.Errors.UnAuthorizedError('INVALID_TOKEN', 'Invalid token');}
+                return {jwt:decoded};
+            })
 		},
 
 		/**
