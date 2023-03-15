@@ -3,7 +3,7 @@ import type { Context, ServiceSchema } from "moleculer";
 import type { ApiSettingsSchema, IncomingRequest, Route } from "moleculer-web";
 import ApiGateway from "moleculer-web";
 import serviceConfig from "../config/service.config";
-import { User } from "../users/type/user.type";
+
 
 interface Meta {
 	userAgent?: string | null | undefined;
@@ -150,10 +150,12 @@ const GatewayService: ServiceSchema<ApiSettingsSchema> = {
 			const auth = req.headers.authorization;
             if(!auth||!auth.startsWith('Bearer')){throw new ApiGateway.Errors.UnAuthorizedError('INVALID_TOKEN', 'Invalid token');}
             const accessToken = auth.split(' ')[1];
+            let user;
             jwt.verify(accessToken,serviceConfig.gateway.jwt.access.secret,(err,decoded)=>{
                 if(err){throw new ApiGateway.Errors.UnAuthorizedError('INVALID_TOKEN', 'Invalid token');}
-                return {jwt:decoded};
+                user = decoded;
             })
+            return { user };
 		},
 
 		/**
