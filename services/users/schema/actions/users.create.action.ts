@@ -17,7 +17,6 @@ const userCreateVaildator = {
 
  const userCreateActions : ActionSchema = {
     name: serviceConfig.user.actions.create.name,
-    rest: serviceConfig.user.actions.create.rest,
     params: {
         name : userCreateVaildator.name,
         email : userCreateVaildator.email,

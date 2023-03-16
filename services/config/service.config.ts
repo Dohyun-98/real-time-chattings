@@ -85,7 +85,7 @@ const serviceConfig =  {
         }
     },
     paramsValidator: {
-        id : { type: "string", min: 1, max: 24, pattern: /^[a-f\d]{24}$/i, },
+        id : { type: "string", min: 20, max: 30, pattern:  /^[a-zA-Z0-9]{20,30}$/i, },
         email : { type: "email", },
         password : { type: "string", min: 6, max: 20, pattern: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,20}$/,},
         name : { type: "string", min: 1, max: 20, pattern: /^[a-zA-Z0-9가-힣]{1,20}$/i, },

@@ -27,17 +27,29 @@ const GatewayService: ServiceSchema<ApiSettingsSchema> = {
 
 		routes: [
             {
+                path: "/users",
+                aliases: {
+                    "POST /": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.create.name}`,
+                    // "GET /": "users.getUsers",
+                },
+               authentication: false,
+            },
+            {
+                path: "/users",
+                aliases: {
+                    "GET /:id": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.get.name}`,
+                    "PUT /:id": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.update.name}`,
+                    "DELETE /:id": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.delete.name}`,
+                },
+                authentication: true,
+            },
+            {
                 path: "/api",
                 aliases: {
-                    "POST /users/": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.create.name}`,
-                    // "GET /": "users.getUsers",
-                    "GET /users/:id": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.get.name}`,
-                    "PUT /users/:id": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.update.name}`,
-                    "DELETE /users/:id": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.delete.name}`,
-                    "POST /auth/login": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.login.name}`,
-                    "POST /auth/register": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.register.name}`,
-                    "POST /auth/logout": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.logout.name}`,
-                    "POST /auth/refresh": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.refresh.name}`,
+                    // "POST /auth/login": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.login.name}`,
+                    // "POST /auth/register": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.register.name}`,
+                    // "POST /auth/logout": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.logout.name}`,
+                    // "POST /auth/refresh": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.refresh.name}`,
                     // socket
                 },
             },
