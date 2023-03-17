@@ -12,6 +12,7 @@ const userDeleteVaildator = {
 
 const userDeleteActions : ActionSchema = {
     name : serviceConfig.user.actions.delete.name,
+    // rest : serviceConfig.user.actions.delete.rest,
     params : {
         id : userDeleteVaildator.id,
     },

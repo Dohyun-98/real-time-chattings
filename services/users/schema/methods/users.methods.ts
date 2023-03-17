@@ -15,7 +15,6 @@ const makeUser: (email:string,name:string,password:string) => Promise<User> = as
 
 const userMethods = {
     makeUser,
-
 }
 
 export default userMethods;

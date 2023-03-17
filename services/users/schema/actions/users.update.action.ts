@@ -19,6 +19,7 @@ const userUpdateVaildator = {
 
 const userUpdateActions: ActionSchema = {
     name: serviceConfig.user.actions.update.name,
+    // rest: serviceConfig.user.actions.update.rest,
     params : {
         id : userUpdateVaildator.id,
         name : userUpdateVaildator.name,

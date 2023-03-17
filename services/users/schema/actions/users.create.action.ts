@@ -17,11 +17,13 @@ const userCreateVaildator = {
 
  const userCreateActions : ActionSchema = {
     name: serviceConfig.user.actions.create.name,
+    // rest: serviceConfig.user.actions.create.rest,
     params: {
         name : userCreateVaildator.name,
         email : userCreateVaildator.email,
         password : userCreateVaildator.password,
     },
+
     async handler(this:UsersServiceThis,ctx: Context<UserCreateParams>){
         // 유효하지 않은 파라미터 추가 시 에러 발생
         validateParams(ctx.params,userCreateVaildator);

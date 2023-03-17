@@ -17,11 +17,11 @@ const serviceConfig =  {
         actions: {
             create: {
                 name : 'createUser',
-                rest : "POST /",
+                rest : "POST /new",
             },
             get: {
                 name : 'getUser',
-                rest : "GET /",
+                rest : "GET /me",
             },
             update: {
                 name : 'updateUser',
@@ -40,7 +40,7 @@ const serviceConfig =  {
                 collection: String(process.env.MONGO_COLLECTION),
                 uri: String(process.env.MONGO_URI),
             }
-        }
+        },
     },
     auth : {
         serviceName: "auth",

@@ -1,7 +1,7 @@
-import jwt from "jsonwebtoken";
 import type { Context, ServiceSchema } from "moleculer";
 import type { ApiSettingsSchema, IncomingRequest, Route } from "moleculer-web";
 import ApiGateway from "moleculer-web";
+import authenticate from "../../utill/auth/authenticate.method";
 import serviceConfig from "../config/service.config";
 
 
@@ -26,38 +26,11 @@ const GatewayService: ServiceSchema<ApiSettingsSchema> = {
 		use: [],
 
 		routes: [
-            {
-                path: "/users",
-                aliases: {
-                    "POST /": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.create.name}`,
-                    // "GET /": "users.getUsers",
-                },
-               authentication: false,
-            },
-            {
-                path: "/users",
-                aliases: {
-                    "GET /:id": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.get.name}`,
-                    "PUT /:id": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.update.name}`,
-                    "DELETE /:id": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.delete.name}`,
-                },
-                authentication: true,
-            },
-            {
-                path: "/api",
-                aliases: {
-                    // "POST /auth/login": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.login.name}`,
-                    // "POST /auth/register": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.register.name}`,
-                    // "POST /auth/logout": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.logout.name}`,
-                    // "POST /auth/refresh": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.refresh.name}`,
-                    // socket
-                },
-            },
 			{
 				path: "/api",
 
-				whitelist: ["**"],
-
+				whitelist: [],
+                
 				// Route-level Express middlewares. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Middlewares
 				use: [],
 
@@ -74,9 +47,7 @@ const GatewayService: ServiceSchema<ApiSettingsSchema> = {
 				// The auto-alias feature allows you to declare your route alias directly in your services.
 				// The gateway will dynamically build the full routes from service schema.
 				autoAliases: true,
-                aliases: {
-                    // "POST: /users": "users.userCreateActions",
-                },
+                aliases: {},
 			
 
 				/**
@@ -127,6 +98,39 @@ const GatewayService: ServiceSchema<ApiSettingsSchema> = {
 				// Enable/disable logging
 				logging: true,
 			},
+            {
+                path: "/api/users",
+                whitelist: [
+                    `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.get.name}`,
+                    `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.update.name}`,
+                    `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.delete.name}`,
+                ],
+                aliases: {
+                    "GET /me": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.get.name}`,
+                    "PUT /": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.update.name}`,
+                    "DELETE /": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.delete.name}`,
+                },
+                authentication: true,
+            },
+            {
+                path: "/api/users/new",
+                whitelist: [
+                    `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.create.name}`,
+                ],
+                aliases: {
+                    "POST /": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.create.name}`,
+                },
+                authentication: false,
+            },
+            {
+                path: "/api/auth",
+                whitelist: [`${serviceConfig.auth.serviceName}.*`],
+                aliases: {
+                    "POST /login": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.login.name}`,
+                    // "POST /register": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.register.name}`,
+                },
+                authentication: false,
+            },
 		],
 
 		// Do not log client side errors (does not log an error response when the error.code is 400<=X<500)
@@ -153,22 +157,7 @@ const GatewayService: ServiceSchema<ApiSettingsSchema> = {
 		 *
 		 * PLEASE NOTE, IT'S JUST AN EXAMPLE IMPLEMENTATION. DO NOT USE IN PRODUCTION!
 		 */
-		authenticate(
-			ctx: Context,
-			route: Route,
-			req: IncomingRequest,
-		): Record<string, unknown> | null {
-			// Read the token from header
-			const auth = req.headers.authorization;
-            if(!auth||!auth.startsWith('Bearer')){throw new ApiGateway.Errors.UnAuthorizedError('INVALID_TOKEN', 'Invalid token');}
-            const accessToken = auth.split(' ')[1];
-            let user;
-            jwt.verify(accessToken,serviceConfig.gateway.jwt.access.secret,(err,decoded)=>{
-                if(err){throw new ApiGateway.Errors.UnAuthorizedError('INVALID_TOKEN', 'Invalid token');}
-                user = decoded;
-            })
-            return { user };
-		},
+		authenticate,
 
 		/**
 		 * Authorize the request. Check that the authenticated user has right to access the resource.
