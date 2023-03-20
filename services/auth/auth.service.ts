@@ -24,7 +24,7 @@ export default class AuthService extends Service {
             mixins: [],
             actions,
             methods,
-            dependencies: [UsersService],
+            dependencies: ["users"],
             created : authServiceCreated,
             started : authServiceStarted,
             stopped : authServiceStopped,

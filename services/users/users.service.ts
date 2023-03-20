@@ -16,9 +16,7 @@ export default class UsersService extends Service{
 
     constructor(broker: ServiceBroker) {
         super(broker);
-        this.adapter = new MongoDbAdapter(serviceConfig.user.database.mongo.uri,{
-
-        });
+        this.adapter = new MongoDbAdapter(serviceConfig.user.database.mongo.uri);
         this.collection = serviceConfig.user.database.mongo.collection;
         this.parseServiceSchema({
             name: serviceConfig.user.serviceName,

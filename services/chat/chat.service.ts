@@ -24,6 +24,7 @@ export default class ChatService extends Service {
 		this.parseServiceSchema({
 			name: serviceConfig.chat.serviceName,
             mixins: [DbService],
+            dependencies: ["users"],
             adapter: this.chatAdapter,
             collection: serviceConfig.chat.database.mongo.collection,
             created: chatServiceCreated,

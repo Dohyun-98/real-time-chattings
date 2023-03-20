@@ -1,5 +1,6 @@
 import type { ActionSchema, Context } from "moleculer";
 import serviceConfig from "../../../config/service.config";
+import type { User } from "../../type/user.type";
 import type { UsersServiceThis } from "../../type/users.service.type";
 
 interface UserGetParams {
@@ -10,12 +11,14 @@ const userGetActions : ActionSchema = {
     name: serviceConfig.user.actions.get.name,
     // rest: serviceConfig.user.actions.get.rest,
     async handler(this:UsersServiceThis, ctx: Context<UserGetParams> & {meta : {user : {id : string}}}){
-        // 인가 로직 필요
-        // 유효하지 않은 파라미터 추가 시 에러 발생
-        console.log(ctx.meta.user.id);
-        const user = await this.adapter.findById(ctx.meta.user.id);
+        const user : Partial<User> = await this.adapter.findOne({id : ctx.params.id});
         if(!user){throw new Error("User not found");}
-        return user;
+        const userData = {
+            id : user._id,
+            email : user.email,
+            name : user.name,
+        }
+        return userData;
     }
 }
 
