@@ -15,7 +15,7 @@ const userCreateVaildator = {
     password : serviceConfig.paramsValidator.password,
 }
 
- const userCreateActions : ActionSchema = {
+ const userCreateAction : ActionSchema = {
     name: serviceConfig.user.actions.create.name,
     // rest: serviceConfig.user.actions.create.rest,
     params: {
@@ -38,4 +38,4 @@ const userCreateVaildator = {
 }
 
 
-export default userCreateActions;
+export default userCreateAction;

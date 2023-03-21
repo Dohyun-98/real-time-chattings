@@ -1,14 +1,14 @@
-import userCreateActions from "./users.create.action";
-import userDeleteActions from "./users.delete.action";
+import userCreateAction from "./users.create.action";
+import userDeleteAction from "./users.delete.action";
 import userFindByEmailAction from "./users.findByEmail.action";
-import userGetActions from "./users.get.action";
-import userUpdateActions from "./users.update.action";
+import userGetAction from "./users.get.action";
+import userUpdateAction from "./users.update.action";
 
 const userActions = {
-    userCreateActions,
-    userUpdateActions,
-    userGetActions,
-    userDeleteActions,
+    userCreateAction,
+    userUpdateAction,
+    userGetAction,
+    userDeleteAction,
     userFindByEmailAction,
 }
 export default userActions;

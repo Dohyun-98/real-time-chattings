@@ -17,7 +17,7 @@ const userUpdateVaildator = {
     password : serviceConfig.paramsValidator.password,
 }
 
-const userUpdateActions: ActionSchema = {
+const userUpdateAction: ActionSchema = {
     name: serviceConfig.user.actions.update.name,
     // rest: serviceConfig.user.actions.update.rest,
     params : {
@@ -37,4 +37,4 @@ const userUpdateActions: ActionSchema = {
     }
 }
 
-export default userUpdateActions;
+export default userUpdateAction;

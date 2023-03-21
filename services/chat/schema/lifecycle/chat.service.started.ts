@@ -1,4 +1,4 @@
-import type { ChatServiceThis } from "../../type/users.service.type";
+import type { ChatServiceThis } from "../../type/chat.service.type";
 
 async function chatServiceStarted(this:ChatServiceThis): Promise<void>{
     this.logger.info("Chat service started");

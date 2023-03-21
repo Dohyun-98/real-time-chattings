@@ -10,7 +10,7 @@ const userDeleteVaildator = {
     id : serviceConfig.paramsValidator.id,
 }
 
-const userDeleteActions : ActionSchema = {
+const userDeleteAction : ActionSchema = {
     name : serviceConfig.user.actions.delete.name,
     // rest : serviceConfig.user.actions.delete.rest,
     params : {
@@ -26,4 +26,4 @@ const userDeleteActions : ActionSchema = {
     }
 }
 
-export default userDeleteActions;
+export default userDeleteAction;

@@ -1,4 +1,4 @@
-import type { ChatServiceThis } from "../../type/users.service.type";
+import type { ChatServiceThis } from "../../type/chat.service.type";
 
 function chatServiceCreated(this:ChatServiceThis): void{
     this.logger.info("Chat service created");

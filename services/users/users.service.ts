@@ -10,10 +10,6 @@ import usersServiceStopped  from "./schema/lifecycle/users.service.stopped";
 import userMethods from "./schema/methods/users.methods";
 
 export default class UsersService extends Service{
-    adapter;
-
-    collection;
-
     constructor(broker: ServiceBroker) {
         super(broker);
         this.adapter = new MongoDbAdapter(serviceConfig.user.database.mongo.uri);
@@ -21,7 +17,7 @@ export default class UsersService extends Service{
         this.parseServiceSchema({
             name: serviceConfig.user.serviceName,
             mixins: [DbService],
-            dependencies: [],
+            dependencies: [], 
             adapter: this.adapter,
             collection: this.collection,
             actions: userActions,

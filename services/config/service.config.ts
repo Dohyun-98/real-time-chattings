@@ -89,6 +89,7 @@ const serviceConfig =  {
         email : { type: "email", },
         password : { type: "string", min: 6, max: 20, pattern: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,20}$/,},
         name : { type: "string", min: 1, max: 20, pattern: /^[a-zA-Z0-9가-힣]{1,20}$/i, },
+        participants : { type: "array", items: "string", min: 1, max: 20, },
     },
     chat:{
         serviceName: "chat",
@@ -113,26 +114,6 @@ const serviceConfig =  {
                 name : 'deleteChat',
                 rest : "DELETE /:id",
             },
-            createRoom: {
-                name : 'createRoom',
-                rest : "POST /room",
-            },
-            getRoom: {
-                name : 'getRoom',
-                rest : "GET /room/:id",
-            },
-            getRoomList: {
-                name : 'getRoomList',
-                rest : "GET /room",
-            },
-            updateRoom: {
-                name : 'updateRoom',
-                rest : "PUT /room/:id",
-            },
-            deleteRoom: {
-                name : 'deleteRoom',
-                rest : "DELETE /room/:id",
-            },
         },
          database:{
             mongo : {
@@ -140,6 +121,37 @@ const serviceConfig =  {
                 uri: String(process.env.MONGO_URI),
             }
         }
+    },
+    chatRoom:{
+        serviceName: "chatRoom",
+        actions:{
+            getChatRoomList: {
+                name : 'getChatRoomList',
+                rest : "GET /",
+            },
+            getChatRoom: {
+                name : 'getChatRoom',
+                rest : "GET /:id",
+            },
+            createChatRoom: {
+                name : 'createChatRoom',
+                rest : "POST /",
+            },
+            updateChatRoom: {
+                name : 'updateChatRoom',
+                rest : "PUT /:id",
+            },
+            deleteChatRoom: {
+                name : 'deleteChatRoom',
+                rest : "DELETE /:id",
+            },
+        },
+        database:{
+            mongo : {
+                collection: String(process.env.MONGO_COLLECTION),
+                uri: String(process.env.MONGO_URI),
+            },
+        },
     }
 }
 

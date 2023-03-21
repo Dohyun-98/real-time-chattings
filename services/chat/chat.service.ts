@@ -14,8 +14,6 @@ import chatServiceStopped from "./schema/lifecycle/chat.service.stopped";
 // 채팅방 수정(인원 변경)
 
 export default class ChatService extends Service {
-    adapter;
-    
 	constructor(broker: ServiceBroker) {
 		super(broker);
         this.adapter = new MongoDbAdapter(serviceConfig.chat.database.mongo.uri,{
@@ -24,7 +22,7 @@ export default class ChatService extends Service {
 		this.parseServiceSchema({
 			name: serviceConfig.chat.serviceName,
             mixins: [DbService],
-            dependencies: ["users"],
+            dependencies: ["users", "chatRoom"],
             adapter: this.chatAdapter,
             collection: serviceConfig.chat.database.mongo.collection,
             created: chatServiceCreated,

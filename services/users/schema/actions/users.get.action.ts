@@ -7,7 +7,7 @@ interface UserGetParams {
     id : string,
 }
 
-const userGetActions : ActionSchema = {
+const userGetAction : ActionSchema = {
     name: serviceConfig.user.actions.get.name,
     // rest: serviceConfig.user.actions.get.rest,
     async handler(this:UsersServiceThis, ctx: Context<UserGetParams> & {meta : {user : {id : string}}}){
@@ -22,4 +22,4 @@ const userGetActions : ActionSchema = {
     }
 }
 
-export default userGetActions;
+export default userGetAction;

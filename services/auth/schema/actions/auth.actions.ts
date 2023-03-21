@@ -1,7 +1,7 @@
-import authLoginActions from "./auth.login.actions";
+import authLoginAction from "./auth.login.actions";
 
 const authActions = {
-    authLoginActions
+    authLoginAction,
 }
 
 export default authActions;

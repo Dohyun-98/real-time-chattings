@@ -15,7 +15,7 @@ const authLoginVaildator = {
     password : serviceConfig.paramsValidator.password,
 }
 
-const authLoginActions : ActionSchema = {
+const authLoginAction : ActionSchema = {
     rest: serviceConfig.auth.actions.login.rest,
     name: serviceConfig.auth.actions.login.name,
     params: {
@@ -31,4 +31,4 @@ const authLoginActions : ActionSchema = {
     }
 }
 
-export default authLoginActions;
+export default authLoginAction;

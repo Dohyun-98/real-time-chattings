@@ -8,10 +8,9 @@ import ioServiceStopped from "./schema/lifecycle/io.service.stopped";
 export default class IOService extends Service {
 	constructor(broker: ServiceBroker) {
 		super(broker);
-		this.io = undefined;
 		this.parseServiceSchema({
 			name: serviceConfig.io.serviceName,
-			io: this.io,
+			io: undefined,
 			mixins: [],
 			dependencies: [],
 			created: ioServiceCreated,
