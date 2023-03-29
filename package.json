@@ -8,6 +8,8 @@
     "dev_user": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js -E env/local/users.service.local.env --config services/users/moleculer.users.config.ts --hot --repl services/users/*.service.ts",
     "dev_gateway": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js -E env/local/gateway.service.local.env --config services/gateway/moleculer.gateway.config.ts --hot --repl services/gateway/gateway.service.ts",
     "dev_auth": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js -E env/local/auth.service.local.env --config services/auth/moleculer.auth.config.ts --hot --repl services/auth/*.service.ts",
+    "dev_chatRoom": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js -E env/local/chatRoom.service.local.env --config services/chatRoom/moleculer.chatRoom.config.ts --hot --repl services/chatRoom/*.service.ts",
+    "dev_chat": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js -E env/local/chat.service.local.env --config services/chat/moleculer.chat.config.ts --hot --repl services/chat/*.service.ts",
     "dev_io": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js -E env/local/io.service.local.env --config services/io/moleculer.io.config.ts --hot --repl services/io/*.service.ts",
     "start": "moleculer-runner --config dist/moleculer.config.js",
     "test:types": "concurrently npm:prettier npm:lint npm:typecheck",
@@ -60,6 +62,7 @@
     "moleculer-db": "^0.8.23",
     "moleculer-db-adapter-mongo": "^0.4.17",
     "moleculer-web": "^0.10.5",
+    "mongodb": "^5.1.0",
     "socket.io": "^4.6.1",
     "uuid": "^9.0.0"
   },

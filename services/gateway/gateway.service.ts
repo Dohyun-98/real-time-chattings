@@ -131,6 +131,15 @@ const GatewayService: ServiceSchema<ApiSettingsSchema> = {
                 },
                 authentication: false,
             },
+            {
+                path: "/api/chatRoom",
+                whitelist: [
+                    `${serviceConfig.chatRoom.serviceName}.${serviceConfig.chatRoom.actions.createChatRoom.name}`,
+                ],
+                aliases: {
+                    "POST /": `${serviceConfig.chatRoom.serviceName}.${serviceConfig.chatRoom.actions.createChatRoom.name}`,
+                },
+            }
 		],
 
 		// Do not log client side errors (does not log an error response when the error.code is 400<=X<500)

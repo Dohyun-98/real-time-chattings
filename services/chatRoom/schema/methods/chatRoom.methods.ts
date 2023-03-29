@@ -1,21 +1,15 @@
-import { v4 as uuidv4 } from 'uuid';
+import type { Room } from '../../type/chatRoom.type';
 
-function makeChatRoom (participants: string[], name?: string) {
-    if(!name){
-        let count = 0;
-        name = participants.filter((person)=>{
-            return person !== this.name;
-        }).join(", ");
-    }
+function makeChatRoom (participants: string[], roomName: string) : Pick<Room,"participants"|"roomName"> {
     return {
-        roomID: uuidv4(),
         participants,
-        roomName : 
+        roomName,
     }
+    
 }
 
 const chatRoomMethods = {
-    
+    makeChatRoom,
 }
 
 export default chatRoomMethods;

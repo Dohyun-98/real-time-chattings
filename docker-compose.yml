@@ -21,6 +21,16 @@ services:
       - 6379:6379
     networks:
       - internal
+  
+  # pubsubRedis:
+  #   image: redis:alpine
+  #   environment:
+  #     - REDIS_PASSWORD=12Sqecd34!
+  #     - REDIS_PORT=6380
+  #   ports:
+  #     - 6380:6380
+  #   networks:
+  #     - internal
       
 networks:
   internal:

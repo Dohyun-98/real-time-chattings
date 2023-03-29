@@ -83,5 +83,37 @@ module.exports = {
         NODE_ENV: "production",
       }
     }, 
+    {
+        name: "chatRoom",
+        script: "npm run dev_chatRoom",
+        // interpreter: "ts-node",
+        // exec_mode: "cluster",
+        instances: "1",
+        autorestart: false,
+        watch: true,
+        max_memory_restart: "1G",
+        env: {
+          NODE_ENV: "development",
+        },
+        env_production: {
+          NODE_ENV: "production",
+        }
+      }, 
+      {
+        name: "chat",
+        script: "npm run dev_chat",
+        // interpreter: "ts-node",
+        // exec_mode: "cluster",
+        instances: "1",
+        autorestart: false,
+        watch: true,
+        max_memory_restart: "1G",
+        env: {
+          NODE_ENV: "development",
+        },
+        env_production: {
+          NODE_ENV: "production",
+        }
+      }, 
   ]
   }

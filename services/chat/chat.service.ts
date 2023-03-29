@@ -3,6 +3,7 @@ import { Service } from "moleculer";
 import DbService from "moleculer-db";
 import MongoDbAdapter from "moleculer-db-adapter-mongo";
 import serviceConfig from "../config/service.config";
+import chatActions from "./schema/actions/chat.actions";
 import chatServiceCreated from "./schema/lifecycle/chat.service.created";
 import chatServiceStarted from "./schema/lifecycle/chat.service.started";
 import chatServiceStopped from "./schema/lifecycle/chat.service.stopped";
@@ -22,6 +23,7 @@ export default class ChatService extends Service {
 		this.parseServiceSchema({
 			name: serviceConfig.chat.serviceName,
             mixins: [DbService],
+            actions: chatActions,
             dependencies: ["users", "chatRoom"],
             adapter: this.chatAdapter,
             collection: serviceConfig.chat.database.mongo.collection,

@@ -18,7 +18,7 @@ function authenticate(
         if(err){throw new ApiGatewayService.Errors.UnAuthorizedError('INVALID_TOKEN', 'Invalid token');}
         user = decoded;
     })
-    return { id: user._id, email: user.email };
+    return { id: user._id, email: user.emai, name: user.name };
 }
 
 export default authenticate;
