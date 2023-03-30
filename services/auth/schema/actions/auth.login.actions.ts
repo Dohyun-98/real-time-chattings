@@ -27,7 +27,7 @@ const authLoginAction : ActionSchema = {
         const user : User = await this.broker.call(`${serviceConfig.user.serviceName}.${serviceConfig.user.actions.findByEmail.name}`,{email:ctx.params.email});
         if(!bcrypt.compareSync(ctx.params.password,user.password)){throw new Error("Password is not correct");}
         const token = await this.makeAccessToken(user,serviceConfig.auth.jwt.access.secret,serviceConfig.auth.jwt.access.expire);
-        return {token};
+        return {token,userId:user._id};
     }
 }
 

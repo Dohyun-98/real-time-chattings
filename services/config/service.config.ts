@@ -94,6 +94,12 @@ const serviceConfig =  {
             inviteRoom: {
                 name: 'inviteRoom',
             }
+        },
+        rabbitmq:{
+            host: String(process.env.RABBITMQ_HOST),
+            port: Number(process.env.RABBITMQ_PORT),
+            username: String(process.env.RABBITMQ_USERNAME),
+            password: String(process.env.RABBITMQ_PASSWORD),
         }
     },
     paramsValidator: {

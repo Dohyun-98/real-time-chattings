@@ -31,6 +31,7 @@
   "author": "",
   "devDependencies": {
     "@jest/globals": "^29.3.1",
+    "@types/amqplib": "^0.10.1",
     "@types/jest": "^29.2.3",
     "@types/node": "^18.11.9",
     "@typescript-eslint/eslint-plugin": "^5.44.0",
@@ -54,6 +55,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.1",
     "@types/uuid": "^9.0.1",
+    "amqplib": "^0.10.3",
     "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "ioredis": "^5.0.0",

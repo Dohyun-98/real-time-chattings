@@ -22,6 +22,21 @@ services:
     networks:
       - internal
   
+  rabbitmq:
+    image: 'rabbitmq:3-management-alpine'
+    # volumes:
+    #   - rabbitmq_data:/var/lib/rabbitmq/
+    #   - rabbitmq_log:/var/log/rabbitmq/
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "RabbitMQ-My-Cookies"
+      RABBITMQ_DEFAULT_USER: "user"
+      RABBITMQ_DEFAULT_PASS: "user"
+    networks:
+      - internal
+  
   # pubsubRedis:
   #   image: redis:alpine
   #   environment:

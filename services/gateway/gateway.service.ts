@@ -4,7 +4,6 @@ import ApiGateway from "moleculer-web";
 import authenticate from "../../utill/auth/authenticate.method";
 import serviceConfig from "../config/service.config";
 
-
 interface Meta {
 	userAgent?: string | null | undefined;
 	user?: object | null | undefined;
@@ -30,11 +29,10 @@ const GatewayService: ServiceSchema<ApiSettingsSchema> = {
 				path: "/api",
 
 				whitelist: [],
-                
+
 				// Route-level Express middlewares. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Middlewares
 				use: [],
 
-               
 				// Enable/disable parameter merging method. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Disable-merging
 				mergeParams: true,
 
@@ -47,8 +45,7 @@ const GatewayService: ServiceSchema<ApiSettingsSchema> = {
 				// The auto-alias feature allows you to declare your route alias directly in your services.
 				// The gateway will dynamically build the full routes from service schema.
 				autoAliases: true,
-                aliases: {},
-			
+				aliases: {},
 
 				/**
 				 * Before call hook. You can check the request.
@@ -98,49 +95,53 @@ const GatewayService: ServiceSchema<ApiSettingsSchema> = {
 				// Enable/disable logging
 				logging: true,
 			},
-            {
-                path: "/api/users",
-                whitelist: [
-                    `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.get.name}`,
-                    `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.update.name}`,
-                    `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.delete.name}`,
-                ],
-                aliases: {
-                    "GET /me": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.get.name}`,
-                    "PUT /": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.update.name}`,
-                    "DELETE /": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.delete.name}`,
-                },
-                authentication: true,
-            },
-            {
-                path: "/api/users/new",
-                whitelist: [
-                    `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.create.name}`,
-                ],
-                aliases: {
-                    "POST /": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.create.name}`,
-                },
-                authentication: false,
-            },
-            {
-                path: "/api/auth",
-                whitelist: [`${serviceConfig.auth.serviceName}.*`],
-                aliases: {
-                    "POST /login": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.login.name}`,
-                    // "POST /register": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.register.name}`,
-                },
-                authentication: false,
-            },
-            {
-                path: "/api/chatRoom",
-                whitelist: [
-                    `${serviceConfig.chatRoom.serviceName}.${serviceConfig.chatRoom.actions.createChatRoom.name}`,
-                ],
-                aliases: {
-                    "POST /": `${serviceConfig.chatRoom.serviceName}.${serviceConfig.chatRoom.actions.createChatRoom.name}`,
-                },
-            }
+			{
+				path: "/api/users",
+				whitelist: [
+					`${serviceConfig.user.serviceName}.${serviceConfig.user.actions.get.name}`,
+					`${serviceConfig.user.serviceName}.${serviceConfig.user.actions.update.name}`,
+					`${serviceConfig.user.serviceName}.${serviceConfig.user.actions.delete.name}`,
+				],
+				aliases: {
+					"GET /me": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.get.name}`,
+					"PUT /": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.update.name}`,
+					"DELETE /": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.delete.name}`,
+				},
+				authentication: true,
+			},
+			{
+				path: "/api/users/new",
+				whitelist: [
+					`${serviceConfig.user.serviceName}.${serviceConfig.user.actions.create.name}`,
+				],
+				aliases: {
+					"POST /": `${serviceConfig.user.serviceName}.${serviceConfig.user.actions.create.name}`,
+				},
+				authentication: false,
+			},
+			{
+				path: "/api/auth",
+				whitelist: [`${serviceConfig.auth.serviceName}.*`],
+				aliases: {
+					"POST /login": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.login.name}`,
+					// "POST /register": `${serviceConfig.auth.serviceName}.${serviceConfig.auth.actions.register.name}`,
+				},
+				authentication: false,
+			},
+			{
+				path: "/api/chatRoom",
+				whitelist: [
+					`${serviceConfig.chatRoom.serviceName}.${serviceConfig.chatRoom.actions.createChatRoom.name}`,
+				],
+				aliases: {
+					"POST /": `${serviceConfig.chatRoom.serviceName}.${serviceConfig.chatRoom.actions.createChatRoom.name}`,
+				},
+			},
 		],
+		cors: {
+			origin: "*",
+			methods: ["GET", "OPTIONS", "POST", "PUT", "DELETE"],
+		},
 
 		// Do not log client side errors (does not log an error response when the error.code is 400<=X<500)
 		log4XXResponses: false,
