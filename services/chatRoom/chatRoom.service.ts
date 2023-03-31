@@ -9,7 +9,7 @@ import chatRoomServiceStarted from "./schema/lifecycle/chatRoom.service.started"
 import chatRoomServiceStopped from "./schema/lifecycle/chatRoom.service.stopped";
 import chatRoomMethods from "./schema/methods/chatRoom.methods";
 
-export default class ChatRommService extends Service {
+export default class ChatRoomService extends Service {
     constructor(broker: ServiceBroker){
         super(broker);
         this.parseServiceSchema({

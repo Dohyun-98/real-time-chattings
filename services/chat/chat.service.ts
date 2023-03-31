@@ -17,15 +17,12 @@ import chatServiceStopped from "./schema/lifecycle/chat.service.stopped";
 export default class ChatService extends Service {
 	constructor(broker: ServiceBroker) {
 		super(broker);
-        this.adapter = new MongoDbAdapter(serviceConfig.chat.database.mongo.uri,{
-            useNewUrlParser: true,
-        });
 		this.parseServiceSchema({
 			name: serviceConfig.chat.serviceName,
             mixins: [DbService],
             actions: chatActions,
-            dependencies: ["users", "chatRoom"],
-            adapter: this.chatAdapter,
+            dependencies: [],
+            adapter: new MongoDbAdapter(serviceConfig.chat.database.mongo.uri),
             collection: serviceConfig.chat.database.mongo.collection,
             created: chatServiceCreated,
             started: chatServiceStarted,

@@ -117,28 +117,37 @@ function ioServiceStarted(this: IoServiceThis): void {
 		// RabbitMQ PuB
 		socket.on("sendMessage",async (content:ChatMessage) => {
 			// chat 서비스에 채팅 내역 저장 (chatRoomId, userId,name, message)
-            const {roomId, message} = content;
-            const {user} = socket.data;
-			// RabbitMQ Publish
-			const exchangeName = "chat";
-			const exchangeType = "topic";
-			const rabbitmq = await amqp
-				.connect({
-					hostname: serviceConfig.io.rabbitmq.host,
-					port: serviceConfig.io.rabbitmq.port,
-					username: serviceConfig.io.rabbitmq.username,
-					password: serviceConfig.io.rabbitmq.password,
-				})
-				.then((conn) => conn.createChannel());
-			await rabbitmq.assertExchange(exchangeName, exchangeType, { durable: true });
-			await rabbitmq
-				.assertQueue(roomId)
-				.then((q) => rabbitmq.bindQueue(q.queue, exchangeName, roomId));
-            rabbitmq.publish(exchangeName, roomId, Buffer.from(JSON.stringify({
-                userId: user.id,
-                name: user.name,
-                message
+           try {
+                const {roomId, message} = content;
+                const {user} = socket.data;
+                // RabbitMQ Publish
+                const isInsert = await this.broker.call(`${serviceConfig.chat.serviceName}.${serviceConfig.chat.actions.createChat.name}`,{roomId,userId:user.id,userName:user.name,message});
+                if(!isInsert){
+                    throw new Error("database insert error");
+                }
+                const exchangeName = "chat";
+                const exchangeType = "topic";
+                const rabbitmq = await amqp
+                    .connect({
+                        hostname: serviceConfig.io.rabbitmq.host,
+                        port: serviceConfig.io.rabbitmq.port,
+                        username: serviceConfig.io.rabbitmq.username,
+                        password: serviceConfig.io.rabbitmq.password,
+                    })
+                    .then((conn) => conn.createChannel());
+                await rabbitmq.assertExchange(exchangeName, exchangeType, { durable: true });
+                await rabbitmq
+                    .assertQueue(roomId)
+                    .then((q) => rabbitmq.bindQueue(q.queue, exchangeName, roomId));
+                rabbitmq.publish(exchangeName, roomId, Buffer.from(JSON.stringify({
+                    userId: user.id,
+                    name: user.name,
+                    message
             })));
+           } catch (error) {
+                this.logger.error(error);
+                socket.emit("error",error);
+           }
 		});
 	});
 }
