@@ -18,7 +18,10 @@ const inviteRoomEvent : EventSchema = {
         // emit `inviteRoom` event to inviteSocketIds
         for(const socketId of inviteSocketIds){
             if(socketId){
-                this.io.of('chat').to(socketId).emit('invitedRoom',{roomId});
+                const isExistSocketId = this.io.sockets.sockets.has(socketId);
+                if(isExistSocketId){
+                    this.io.of('chat').to(socketId).emit('invitedRoom',{roomId});
+                }
             }
         }
     }

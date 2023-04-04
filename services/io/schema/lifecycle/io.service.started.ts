@@ -13,15 +13,14 @@ function ioServiceStarted(this: IoServiceThis): void {
 		cors: {
 			origin: "*",
 			methods: ["GET", "POST", "PUT", "DELETE"],
-		},
+		},      
 	});
 	server.listen(serviceConfig.io.socket.port, () => {
 		this.logger.info(`Socket server listening on port ${serviceConfig.io.socket.port}`);
 	});
 	this.logger.info("IO service started");
 	this.io.of("chat").use((socket: Socket, next) => {
-		const accessToken = socket.handshake.query.token;
-
+		const accessToken = socket.handshake.query.token as string;
 		jwt.verify(String(accessToken), serviceConfig.gateway.jwt.access.secret, (err, decoded) => {
 			if (err) {
 			    next(new Error("Authentication error"));
@@ -32,6 +31,8 @@ function ioServiceStarted(this: IoServiceThis): void {
 		});
 	});
 	this.io.of("/chat").on("connection", async (socket: Socket) => {
+        // 같은 pod 내에서는 socket.id가 고유하지만 다른 pod에서는 같은 값이 나올 수 있음
+        // 고유한 값으로 socket.id를 저장할 필요는! 없지... 왜 why 검사하면 나오니깐..
 		// access token으로 유저 정보 조회
 		// redis에 socket.id 저장
 		await this.redis.set(socket.data.user.id, socket.id);
@@ -42,10 +43,18 @@ function ioServiceStarted(this: IoServiceThis): void {
 		// 방 참가
 		socket.on("joinRoom", async (roomId: string) => {
 			// db에서 방 정보 조회 후 방에 참가
-			await socket.join(roomId);
-			this.logger.info(`Socket ${socket.id} joined room ${roomId}`);
+            const isInvited = await this.broker.call(`${serviceConfig.chatRoom.serviceName}.${serviceConfig.chatRoom.actions.isInvited.name}`, {
+                userId: socket.data.user.id,
+                roomId,
+            });
+            if(isInvited){
+                // console.log(`${socket.data.user.id} is invited to ${roomId}`);
+                await socket.join(roomId);
+                this.logger.info(`Socket ${socket.id} joined room ${roomId}`);
+            }else{
+                socket.emit('error', "You are not invited to this room");
+            }
 		});
-
 		// 방 생성
 		socket.on("createRoom", async (roomName: string, participants: string[]) => {
             const participantsWithMe = [...participants, socket.data.user.id];
@@ -60,10 +69,9 @@ function ioServiceStarted(this: IoServiceThis): void {
 			// 초대 로직
 			// event를 이용해서 다른 socket에게 초대 메시지 전달
             // 나를 제외한 
-            const participantsWithoutMe = participants.filter((participant) => participant !== socket.data.user.id);
 			await this.broker.broadcast(serviceConfig.io.events.inviteRoom.name, {
 				roomId: room._id,
-				participants:participantsWithoutMe,
+				participants,
 			});
 			// Rabbit room_id queue 생성
 			const exchangeName = "chat";
@@ -106,10 +114,16 @@ function ioServiceStarted(this: IoServiceThis): void {
             const {user} = socket.data;
             if (this.io.of("/chat").adapter.rooms.get(roomId)?.size === 0) {
                 // 방 삭제 이벤트 발생
+                await this.broker.call(`${serviceConfig.chatRoom.serviceName}.${serviceConfig.chatRoom.actions.deleteChatRoom.name}`, {
+                    roomId,
+                });
             }else{
                 // 방에 남은 사람이 존재하면, 방 정보에서 나간 사람 삭제 및 방 알림 이벤트 발생
+                await this.broker.call(`${serviceConfig.chatRoom.serviceName}.${serviceConfig.chatRoom.actions.leaveRoom.name}`, {
+                    roomId,
+                    userId:user.id,
+                });
             }
-			// 방에 남은 사람이 존재하면, 방 정보에서 나간 사람 삭제 및 방 알림
 			await socket.leave(roomId);
 			this.logger.info(`Socket ${socket.id} left room ${roomId}`);
 		});
@@ -144,6 +158,7 @@ function ioServiceStarted(this: IoServiceThis): void {
                     name: user.name,
                     message
             })));
+            await rabbitmq.close();
            } catch (error) {
                 this.logger.error(error);
                 socket.emit("error",error);

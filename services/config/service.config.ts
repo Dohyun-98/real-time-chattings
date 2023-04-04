@@ -165,8 +165,13 @@ const serviceConfig =  {
             },
             deleteChatRoom: {
                 name : 'deleteChatRoom',
-                rest : "DELETE /:id",
             },
+            isInvited: {
+                name : 'isInvited',
+            },
+            leaveRoom : {
+                name : 'leaveRoom',
+            }
         },
         database:{
             mongo : {
