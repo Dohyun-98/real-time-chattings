@@ -19,7 +19,6 @@ const inviteRoomEvent : EventSchema = {
         for(const socketId of inviteSocketIds){
             if(socketId){
                 const isExistSocketId = this.io.of('/chat').sockets.has(socketId);
-                console.log(`isExistSocketId : ${isExistSocketId}`);
                 if(isExistSocketId){
                     this.io.of('chat').to(socketId).emit('invitedRoom',{roomId});
                 }

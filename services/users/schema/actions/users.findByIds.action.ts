@@ -1,4 +1,5 @@
-import type { ActionSchema, Context } from "moleculer";
+import type { ActionSchema, Context} from "moleculer";
+import { Errors } from "moleculer";
 import validateParams from "../../../../utill/paramsVaildator/validator.params";
 import serviceConfig from "../../../config/service.config";
 import type { User } from "../../type/user.type";
@@ -26,7 +27,7 @@ const userFindByIdsAction : ActionSchema = {
                 email : user.email,
             }));
         if(users.length!==ctx.params.ids.length) {
-            throw new Error("User not Exist");
+            throw new Errors.MoleculerClientError("user not found", 404, "USER_NOT_FOUND", {ctx});
         }
         return users;
     }
