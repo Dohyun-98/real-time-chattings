@@ -26,7 +26,7 @@ const chatRoomCreateAction : ActionSchema = {
         try {
             const users = await this.broker.call(`${serviceConfig.user.serviceName}.${serviceConfig.user.actions.findByIds.name}`,{ids : ctx.params.participants});
             const chatRoom = await this.makeChatRoom(users,ctx.params.roomName);
-            const room = await this.adapter.insert(chatRoom).catch((err) => {throw new Error(err)});
+            const room = await this.adapter.insert(chatRoom);
             return room;    
         } catch (error) {
             throw new Error(error);
