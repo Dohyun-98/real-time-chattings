@@ -1,4 +1,4 @@
-import type { BrokerOptions, MetricRegistry, ServiceBroker } from "moleculer";
+import type { BrokerOptions } from "moleculer";
 import { Errors } from "moleculer";
 
 /**
@@ -30,10 +30,10 @@ const brokerConfig: BrokerOptions = {
 	// Namespace of nodes to segment your nodes on the same network.
 	namespace: process.env.SERVICE_BROKER_NAMESPACE || "local",
 	// Unique node identifier. Must be unique in a namespace.
-	nodeID: String(process.env.NODE_NAME) || "node1",
+	// nodeID: String(process.env.NODE_NAME) || "node1",
 	// Custom metadata store. Store here what you want. Accessing: `this.broker.metadata`
 	metadata: {},
-     
+
 	// Enable/disable logging or use custom logger. More info: https://moleculer.services/docs/0.14/logging.html
 	// Available logger types: "Console", "File", "Pino", "Winston", "Bunyan", "debug", "Log4js", "Datadog"
 	logger: {
@@ -51,28 +51,27 @@ const brokerConfig: BrokerOptions = {
 			autoPadding: false,
 		},
 	},
-
-    hotReload: true,
 	// Default log level for built-in console logger. It can be overwritten in logger options above.
 	// Available values: trace, debug, info, warn, error, fatal
-	logLevel: "info",
+	logLevel: "debug",
 
 	// Define transporter.
 	// More info: https://moleculer.services/docs/0.14/networking.html
 	// Note: During the development, you don't need to define it because all services will be loaded locally.
 	// In production you can set it via `TRANSPORTER=nats://localhost:4222` environment variable.
-	transporter: null ,
-    // {
-    //     type : String(process.env.TRANSPORTER_TYPE) || "redis",
-    //     options : {
-    //         port : Number(process.env.REDIS_PORT),
-    //         host : String(process.env.REDIS_HOST),
-    //     },
-    //  }, // "Redis"
+	transporter: 
+    {
+        type : String(process.env.TRANSPORTER_TYPE) || "redis",
+        options : {
+            port : Number(process.env.REDIS_PORT),
+            host : String(process.env.REDIS_HOST),
+        },
+     }, // "Redis"
 
 	// Define a cacher.
 	// More info: https://moleculer.services/docs/0.14/caching.html
-    cacher: "Redis",
+    cacher: null, 
+    // "Redis",
 
 	// Define a serializer.
 	// Available values: "JSON", "Avro", "ProtoBuf", "MsgPack", "Notepack", "Thrift".
@@ -162,43 +161,59 @@ const brokerConfig: BrokerOptions = {
 	errorHandler: null,
 
 	// Enable/disable built-in metrics function. More info: https://moleculer.services/docs/0.14/metrics.html
-	metrics: {
-		enabled: true,
+	// metrics: {
+	// 	enabled: true,
+	// 	// Available built-in reporters: "Console", "CSV", "Event", "Prometheus", "Datadog", "StatsD"
+	// 	reporter: {
+	// 		type: "Console",
+	// 		options: {
+	// 			// HTTP port
+	// 			port: 3030,
+	// 			// HTTP URL path
+	// 			path: "/metrics",
+	// 			// Default labels which are appended to all metrics labels
+	// 			defaultLabels: (registry: MetricRegistry) => ({
+	// 				namespace: registry.broker.namespace,
+	// 				nodeID: registry.broker.nodeID,
+	// 			}),
+	// 		},
+	// 	},
+	// },
+    metrics: {
+		enabled: false,
 		// Available built-in reporters: "Console", "CSV", "Event", "Prometheus", "Datadog", "StatsD"
 		reporter: {
-			type: "Console",
-			options: {
-				// HTTP port
-				port: 3030,
-				// HTTP URL path
-				path: "/metrics",
-				// Default labels which are appended to all metrics labels
-				defaultLabels: (registry: MetricRegistry) => ({
-					namespace: registry.broker.namespace,
-					nodeID: registry.broker.nodeID,
-				}),
-			},
+			type: "",
 		},
 	},
 
+
 	// Enable built-in tracing function. More info: https://moleculer.services/docs/0.14/tracing.html
-	tracing: {
-		enabled: true,
+	// tracing: {
+	// 	enabled: true,
+	// 	// Available built-in exporters: "Console", "Datadog", "Event", "EventLegacy", "Jaeger", "Zipkin"
+	// 	exporter: {
+	// 		type: "Console", // Console exporter is only for development!
+	// 		options: {
+	// 			// Custom logger
+	// 			logger: null,
+	// 			// Using colors
+	// 			colors: true,
+	// 			// Width of row
+	// 			width: 100,
+	// 			// Gauge width in the row
+	// 			gaugeWidth: 40,
+	// 		},
+	// 	},
+	// },
+    tracing: {
+		enabled: false,
 		// Available built-in exporters: "Console", "Datadog", "Event", "EventLegacy", "Jaeger", "Zipkin"
 		exporter: {
-			type: "Console", // Console exporter is only for development!
-			options: {
-				// Custom logger
-				logger: null,
-				// Using colors
-				colors: true,
-				// Width of row
-				width: 100,
-				// Gauge width in the row
-				gaugeWidth: 40,
-			},
+			type: "", // Console exporter is only for development!
 		},
 	},
+
 
 	// Register custom middlewares
 	middlewares: [],

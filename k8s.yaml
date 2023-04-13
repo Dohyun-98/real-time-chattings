@@ -1,18 +1,157 @@
+# minikube tunnel
 #########################################################
-# Common Environment variables ConfigMap
+# gateway Environment variables ConfigMap
 #########################################################
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: common-env
+  name: gateway-env
 data:
-  NAMESPACE: ""
-  LOGLEVEL: info
-  SERVICEDIR: services
-  TRANSPORTER: redis://redis:6379
-  CACHER: redis://redis:6379
-  MONGO_URI: mongodb://mongo/real-time-chatting
-
+  NAMESPACE: "local"
+  LOGLEVEL: debug
+  SERVICEDIR: services/gateway
+  # MOLECULER_CONFIG: services/gateway/moleculer.gateway.config.js
+  MOLECULER_CONFIG: moleculer.config.js
+  TRANSPORTER_TYPE: redis
+  REDIS_HOST: redis.default.svc.cluster.local
+  REDIS_PORT: "6379"
+  PORT: "3000"
+  JWT_ACCESS_SECRET: secret
+  JWT_ACCESS_EXPIRATION_MINUTES: "30"
+  JWT_REFRESH_SECRET: secret
+  JWT_REFRESH_EXPIRATION_DAYS: "30"
+---
+#########################################################
+# auth Environment variables ConfigMap
+#########################################################
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-env
+data:
+  NAMESPACE: "local"
+  LOGLEVEL: debug
+  SERVICEDIR: services/auth
+  # MOLECULER_CONFIG: services/auth/moleculer.auth.config.js
+  MOLECULER_CONFIG: moleculer.config.js
+  TRANSPORTER_TYPE: redis
+  REDIS_HOST: redis.default.svc.cluster.local
+  REDIS_PORT: "6379"
+  JWT_ACCESS_EXPIRE: "1h"
+  JWT_REFRESH_EXPIRE: "1d"
+---
+#########################################################
+# users Environment variables ConfigMap
+#########################################################
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-env
+data:
+  NAMESPACE: "local"
+  LOGLEVEL: debug
+  SERVICEDIR: services/users
+  # MOLECULER_CONFIG: services/users/moleculer.users.config.js
+  MOLECULER_CONFIG: moleculer.config.js
+  TRANSPORTER_TYPE: redis
+  REDIS_HOST: redis.default.svc.cluster.local
+  REDIS_PORT: "6379"
+  MONGO_COLLECTION: users
+---
+#########################################################
+# chat Environment variables ConfigMap
+#########################################################
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chat-env
+data:
+  NAMESPACE: "local"
+  LOGLEVEL: debug
+  SERVICEDIR: services/chat
+  # MOLECULER_CONFIG: services/chat/moleculer.chat.config.js
+  MOLECULER_CONFIG: moleculer.config.js
+  TRANSPORTER_TYPE: redis
+  REDIS_HOST: redis.default.svc.cluster.local
+  REDIS_PORT: "6379"
+  MONGO_COLLECTION: chats
+---
+#########################################################
+# chatRoom Environment variables ConfigMap
+#########################################################
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chatroom-env
+data:
+  NAMESPACE: "local"
+  LOGLEVEL: debug
+  SERVICEDIR: services/chatRoom
+  # MOLECULER_CONFIG: services/chatRoom/moleculer.chatRoom.config.js
+  MOLECULER_CONFIG: moleculer.config.js
+  TRANSPORTER_TYPE: redis
+  REDIS_HOST: redis.default.svc.cluster.local
+  REDIS_PORT: "6379"
+  MONGO_COLLECTION: rooms
+---
+#########################################################
+# io Environment variables ConfigMap
+#########################################################
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: io-env
+data:
+  NAMESPACE: "local"
+  LOGLEVEL: debug
+  SERVICEDIR: services/io
+  # MOLECULER_CONFIG: services/io/moleculer.io.config.js
+  MOLECULER_CONFIG: moleculer.config.js
+  TRANSPORTER_TYPE: redis
+  REDIS_HOST: redis.default.svc.cluster.local
+  REDIS_PORT: "6379"
+  JWT_ACCESS_SECRET: secret
+  JWT_ACCESS_EXPIRE: 1h
+  SOCKET_IO_PORT: "3001"
+  RABBITMQ_HOST: rabbitmq
+  RABBITMQ_PORT: "5672"
+---
+#########################################################
+# Secret for token
+#########################################################
+apiVersion: v1
+kind: Secret
+metadata:
+  name: token-secret
+type: Opaque
+data:
+  JWT_ACCESS_SECRET: c2VjcmV0
+  JWT_REFRESH_SECRET: c2VjcmV0
+---
+#########################################################
+# Secret for mongo
+#########################################################
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongo-secret
+type: Opaque
+data:
+  MONGO_URI: bW9uZ29kYjovL21vbmdvOjEyU3FlY2QzNCFAbW9uZ28uZGVmYXVsdC5zdmMuY2x1c3Rlci5sb2NhbDoyNzAxNy9hZG1pbg==
+  MONGO_USER: bW9uZ28=
+  MONGO_PASSWORD: MTJTcWVjZDM0IQ==
+---
+#########################################################
+# Secret for rabbitmq
+#########################################################
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rabbitmq-secret
+type: Opaque
+data:
+  RABBITMQ_USERNAME: dXNlcg==
+  RABBITMQ_PASSWORD: dXNlcg==
 ---
 #########################################################
 # Service for Moleculer API Gateway service
@@ -27,7 +166,20 @@ spec:
   ports:
   - port: 3000
     targetPort: 3000
-
+---
+#########################################################
+# Service for Moleculer io service
+#########################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: io
+spec:
+  selector:
+    app: io
+  ports:
+  - port: 3001
+    targetPort: 3001
 ---
 #########################################################
 # Ingress for Moleculer API Gateway
@@ -40,7 +192,7 @@ metadata:
   #  kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - host: real-time-chatting.127.0.0.1.nip.io
+  - host: chat.server.io
     http:
       paths:
       - path: /
@@ -48,9 +200,8 @@ spec:
         backend:
           service:
             name: api
-            port:
+            port: 
               number: 3000
-
 ---
 #########################################################
 # API Gateway service
@@ -63,7 +214,7 @@ spec:
   selector:
     matchLabels:
       app: api
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -75,69 +226,152 @@ spec:
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
-            name: common-env
+            name: gateway-env
+        - secretRef:
+            name: token-secret
         env:
           - name: SERVICES
             value: api
-
 ---
 #########################################################
-# Greeter service
+# auth service
 #########################################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: greeter
+  name: auth
 spec:
   selector:
     matchLabels:
-      app: greeter
+      app: auth
   replicas: 2
   template:
     metadata:
       labels:
-        app: greeter
+        app: auth
     spec:
       containers:
-      - name: greeter
+      - name: auth
         image: real-time-chatting
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
-            name: common-env
-        env:
-          - name: SERVICES
-            value: greeter
-
+            name: auth-env
+        - secretRef:
+            name: token-secret
 ---
 #########################################################
-# Products service
+# users service
 #########################################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: products
+  name: users
 spec:
   selector:
     matchLabels:
-      app: products
+      app: users
   replicas: 2
   template:
     metadata:
       labels:
-        app: products
+        app: users
     spec:
       containers:
-      - name: products
+      - name: users
         image: real-time-chatting
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
-            name: common-env
+            name: user-env
+        - secretRef:
+            name: mongo-secret
+---
+#########################################################
+# chat service
+#########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat
+spec:
+  selector:
+    matchLabels:
+      app: chat
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: chat
+    spec:
+      containers:
+      - name: chat
+        image: real-time-chatting
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: chat-env
+        - secretRef:
+            name: mongo-secret
+---
+#########################################################
+# chatRoom service
+#########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatroom
+spec:
+  selector:
+    matchLabels:
+      app: chatroom
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: chatroom
+    spec:
+      containers:
+      - name: chatroom
+        image: real-time-chatting
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: chatroom-env
+        - secretRef:
+            name: mongo-secret
+---
+#########################################################
+# io service
+#########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: io
+spec:
+  selector:
+    matchLabels:
+      app: io
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: io
+    spec:
+      containers:
+      - name: io
+        image: real-time-chatting
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: io-env
+        - secretRef:
+            name: rabbitmq-secret
+        - secretRef:
+            name : token-secret
         env:
           - name: SERVICES
-            value: products
-
+            value: io
 ---
 #########################################################
 # MongoDB server
@@ -168,6 +402,19 @@ spec:
           volumeMounts:
             - mountPath: /data/db
               name: mongo-data
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: mongo
+              # valueFrom:
+              #   secretKeyRef:
+              #     name: mongo-secret
+              #     key: MONGO_USER
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: 12Sqecd34!
+              # valueFrom:
+              #   secretKeyRef:
+              #     name: mongo-secret
+              #     key: MONGO_PASSWORD
       volumes:
         - name: mongo-data
           persistentVolumeClaim:
@@ -206,9 +453,6 @@ spec:
       targetPort: 27017
   selector:
     app: mongo          
-
-
-
 ---
 #########################################################
 # Redis service
@@ -224,7 +468,6 @@ spec:
   - port: 6379
     name: redis
     targetPort: 6379
-
 ---
 #########################################################
 # Redis server (transporter/cacher)
@@ -251,7 +494,62 @@ spec:
         ports:
         - containerPort: 6379
           name: redis
-
+---
+#########################################################
+# RabbitMQ server (transporter)
+#########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    matchLabels:
+      app: rabbitmq
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3-management
+        ports:
+        - containerPort: 5672
+          name: rabbitmq
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_PASSWORD
+---
+#########################################################
+# rabbotmq service
+#########################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    app: rabbitmq
+  ports:
+  - port: 5672
+    name: rabbitmq
+    targetPort: 5672
+  - port: 15672
+    name: rabbitmq-management
+    targetPort: 15672
+---
 
 
 
