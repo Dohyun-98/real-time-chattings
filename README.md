@@ -1,5 +1,13 @@
 # real-time-chatting
 
+### 사용 스택
+- moleculer.js
+- mongodb
+- socket.io
+- redis
+- docker
+- kubernetes
+
 ### websocket 란?
 
 - 양방향 소통을 위한 프로토콜
